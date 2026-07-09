@@ -164,7 +164,9 @@ async function callOpenAI(imagePath) {
     },
     body: JSON.stringify({
       model: MODEL,
-      max_tokens: 4096,
+      max_completion_tokens: 24576,
+      // gpt-5-style models spend from the same budget on reasoning; keep it low
+      ...(MODEL.startsWith('gpt-5') ? { reasoning_effort: 'low' } : {}),
       response_format: {
         type: 'json_schema',
         json_schema: { name: 'lake_report', strict: true, schema: strictify(RECORD_SCHEMA) },
@@ -173,7 +175,11 @@ async function callOpenAI(imagePath) {
         {
           role: 'user',
           content: [
-            { type: 'image_url', image_url: { url: `data:${mediaType};base64,${image}` } },
+            {
+              type: 'image_url',
+              // detail:high — the table is dense; auto downscaling causes digit errors
+              image_url: { url: `data:${mediaType};base64,${image}`, detail: 'high' },
+            },
             { type: 'text', text: PROMPT },
           ],
         },
@@ -192,13 +198,89 @@ async function loadHistory() {
   return JSON.parse(await readFile(HISTORY, 'utf8'))
 }
 
+const OCR_ATTEMPTS = 3
+const TOTAL_CAPACITY = Object.values(LAKES).reduce((a, l) => a + l.fslUsefulML, 0)
+
+/** field-wise median of several extracted records — random digit errors
+ * rarely hit the same field twice, so consensus kills them */
+function medianMerge(recs) {
+  const median = (vals) => {
+    const s = [...vals].sort((a, b) => a - b)
+    return s[Math.floor(s.length / 2)]
+  }
+  const merge = (objs) => {
+    if (typeof objs[0] === 'number') return median(objs)
+    if (Array.isArray(objs[0])) {
+      const len = median(objs.map((o) => o.length))
+      const src = objs.find((o) => o.length === len) ?? objs[0]
+      return src.map((_, i) => merge(objs.filter((o) => i < o.length).map((o) => o[i])))
+    }
+    if (objs[0] && typeof objs[0] === 'object') {
+      return Object.fromEntries(Object.keys(objs[0]).map((k) => [k, merge(objs.map((o) => o?.[k]))]))
+    }
+    return objs[0]
+  }
+  return merge(recs)
+}
+
+/** printed %-of-capacity is redundant with storage; use it to repair a
+ * misread storage figure (capacity is static truth) */
+function heal(rec) {
+  const notes = []
+  for (const key of LAKE_KEYS) {
+    const l = rec.lakes[key]
+    if (!l) continue
+    const cfg = LAKES[key]
+    const expected = (l.pctUseful / 100) * cfg.fslUsefulML
+    if (Math.abs(l.liveStorageML - expected) > Math.max(60, cfg.fslUsefulML * 0.006)) {
+      notes.push(`${key}: storage ${l.liveStorageML} → ${Math.round(expected)} (from ${l.pctUseful}%)`)
+      l.liveStorageML = Math.round(expected)
+    }
+  }
+  const sum = LAKE_KEYS.reduce((a, k) => a + (rec.lakes[k]?.liveStorageML ?? 0), 0)
+  const expectedTotal = (rec.totals.pctUseful / 100) * TOTAL_CAPACITY
+  if (
+    Math.abs(sum - rec.totals.liveStorageML) > rec.totals.liveStorageML * 0.01 &&
+    Math.abs(sum - expectedTotal) <= expectedTotal * 0.01
+  ) {
+    notes.push(`totals: ${rec.totals.liveStorageML} → ${sum} (lake sum, matches printed ${rec.totals.pctUseful}%)`)
+    rec.totals.liveStorageML = sum
+  }
+  return notes
+}
+
 async function processImage(imagePath, history) {
   console.log(`OCR: ${imagePath}`)
-  const rec = await callOpenAI(imagePath)
-  const errs = validateRecord(rec, history)
-  if (errs.length) {
+  const attempts = []
+  let rec = null
+  for (let attempt = 1; attempt <= OCR_ATTEMPTS; attempt++) {
+    const r = await callOpenAI(imagePath)
+    attempts.push(r)
+    if (!validateRecord(r, history).length) {
+      rec = r
+      break
+    }
+    console.error(`  attempt ${attempt}/${OCR_ATTEMPTS} did not validate on its own`)
+  }
+  if (!rec && attempts.length > 1) {
+    const merged = medianMerge(attempts)
+    if (!validateRecord(merged, history).length) {
+      console.log('  consensus of attempts validates ✓')
+      rec = merged
+    } else {
+      const notes = heal(merged)
+      if (!validateRecord(merged, history).length) {
+        notes.forEach((n) => console.log(`  healed: ${n}`))
+        console.log('  consensus + healing validates ✓')
+        rec = merged
+      }
+    }
+  }
+  if (!rec) {
+    const errs = validateRecord(medianMerge(attempts), history)
     console.error(`VALIDATION FAILED for ${imagePath}:`)
     errs.forEach((e) => console.error(`  - ${e}`))
+    console.error(JSON.stringify(medianMerge(attempts), null, 1))
     return false
   }
   history.push(rec)
