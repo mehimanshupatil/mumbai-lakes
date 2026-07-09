@@ -3,7 +3,7 @@
 Stylized 3D visualization of the seven lakes that supply Mumbai's water, on real
 terrain, updated daily from BMC's lake-level report.
 
-**Live:** https://mehimanshupatil.github.io/maps/
+**Live:** https://mumbai-lakes.himanshupatil.dev/
 
 - Real elevation (AWS Terrain Tiles), real district boundaries (geoBoundaries),
   real river courses and reservoir locations (OpenStreetMap)
@@ -37,7 +37,7 @@ delete the image.
 
 ```sh
 npm install
-npm run dev      # http://localhost:5173/maps/
+npm run dev      # http://localhost:5173/
 npm run build    # typecheck + production build
 ```
 

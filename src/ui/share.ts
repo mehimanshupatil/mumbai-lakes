@@ -2,7 +2,7 @@
 // native share sheet (or download it on desktop). Needs the r3f Canvas to be
 // created with preserveDrawingBuffer: true.
 
-const SITE = 'mehimanshupatil.github.io/maps'
+const SITE = 'mumbai-lakes.himanshupatil.dev'
 
 export async function shareSnapshot(pctUseful: number, daysOfSupply: number, date: string) {
   const gl = document.querySelector('canvas')

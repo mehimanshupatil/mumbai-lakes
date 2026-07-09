@@ -1,8 +1,8 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// GitHub Pages serves at /maps/
+// custom domain mumbai-lakes.himanshupatil.dev serves at root
 export default defineConfig({
-  base: '/maps/',
+  base: '/',
   plugins: [react()],
 })
