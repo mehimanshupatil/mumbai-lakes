@@ -73,8 +73,8 @@ export function Sea() {
   const hf = useHeightfield()
   return (
     <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
-      <planeGeometry args={[hf.sceneW * 2.5, hf.sceneH * 2.5]} />
-      <meshStandardMaterial color="#2f7f9d" roughness={0.35} metalness={0.05} />
+      <planeGeometry args={[hf.sceneW * 6, hf.sceneH * 6]} />
+      <meshStandardMaterial color="#1e6a89" roughness={0.35} metalness={0.05} />
     </mesh>
   )
 }

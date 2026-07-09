@@ -410,7 +410,8 @@ body {
   gap: 10px;
   font-size: 14px;
   color: #33525f;
-  background: linear-gradient(#c8dfe8, #9dc3d4);
+  background: linear-gradient(#14536e, #0e3f55);
+  color: #cfe4ee;
 }
 
 .loading-drop {

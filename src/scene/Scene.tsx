@@ -20,7 +20,8 @@ function Ready({ onReady }: { onReady: () => void }) {
   return null
 }
 
-const SKY = '#c8dfe8'
+// deep-ocean backdrop — the map floats in water, no pale void at the edges
+const SKY = '#14536e'
 
 // portrait phones need a farther start position to fit the whole system
 const PORTRAIT = typeof window !== 'undefined' && window.innerHeight > window.innerWidth
@@ -38,7 +39,7 @@ export function Scene({ onReady }: { onReady: () => void }) {
       style={{ background: SKY }}
       onPointerMissed={() => setSelected(null)}
     >
-      <fog attach="fog" args={[SKY, 320, 800]} />
+      <fog attach="fog" args={[SKY, 340, 820]} />
       {/* golden-hour grade: warm sun + soft warm fill, kept bright */}
       <ambientLight intensity={0.62} color="#fff3e2" />
       <directionalLight position={[-110, 105, -50]} intensity={1.5} color="#ffdfb4" />
