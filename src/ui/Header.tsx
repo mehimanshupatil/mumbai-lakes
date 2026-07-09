@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useWaterData } from '../data/useWaterData'
 import { STATUS_LABEL, cityStatus } from '../data/status'
 import { setLabelsVisible, useSelection } from '../state/selection'
@@ -12,20 +12,31 @@ function formatDate(iso: string) {
   })
 }
 
-/** counts 0 → target with an ease-out, synced to the lakes' fill animation */
-function useCountUp(target: number, duration = 2600) {
+/**
+ * Eases toward the target from wherever it currently is: the load intro runs
+ * 0 → today over ~2.6s; subsequent target changes (time scrubbing) glide from
+ * the displayed value in ~350ms instead of restarting at zero.
+ */
+function useCountUp(target: number) {
   const [value, setValue] = useState(0)
+  const shown = useRef(0)
+  const first = useRef(true)
   useEffect(() => {
     let raf = 0
+    const from = shown.current
+    const duration = first.current ? 2600 : 350
+    first.current = false
     const t0 = performance.now()
     const step = (t: number) => {
       const p = Math.min(1, (t - t0) / duration)
-      setValue(target * (1 - Math.pow(1 - p, 3)))
+      const v = from + (target - from) * (1 - Math.pow(1 - p, 3))
+      shown.current = v
+      setValue(v)
       if (p < 1) raf = requestAnimationFrame(step)
     }
     raf = requestAnimationFrame(step)
     return () => cancelAnimationFrame(raf)
-  }, [target, duration])
+  }, [target])
   return value
 }
 
