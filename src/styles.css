@@ -197,6 +197,15 @@ body {
   margin-top: 14px;
 }
 
+.panel-trend {
+  margin-top: 14px;
+}
+
+.sparkline {
+  display: block;
+  margin-top: 2px;
+}
+
 .panel-years-title {
   font-size: 10.5px;
   text-transform: uppercase;

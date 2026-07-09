@@ -2,6 +2,7 @@ import { LAKES, TOTAL_DEMAND_MLD, type LakeKey } from '../config/lakes'
 import { useWaterData } from '../data/useWaterData'
 import { STATUS_LABEL, cityStatus, lakeStatus } from '../data/status'
 import { setSelected, useSelection } from '../state/selection'
+import { Sparkline } from './Sparkline'
 
 // remark strings in the BMC report use assorted spellings per lake
 const REMARK_TERMS: Record<LakeKey, string[]> = {
@@ -17,8 +18,9 @@ const REMARK_TERMS: Record<LakeKey, string[]> = {
 const ml = (v: number) => `${v.toLocaleString('en-IN')} ML`
 
 function CityPanel() {
-  const { record, totals, daysOfSupply } = useWaterData()
+  const { record, totals, daysOfSupply, history } = useWaterData()
   const capacity = 1447363
+  const trend = history.map((h) => ({ date: h.date, value: h.totals.pctUseful }))
 
   return (
     <aside className="panel">
@@ -68,6 +70,13 @@ function CityPanel() {
         </div>
       </dl>
 
+      {trend.length > 1 && (
+        <div className="panel-trend">
+          <div className="panel-years-title">This season</div>
+          <Sparkline points={trend} />
+        </div>
+      )}
+
       {totals.previousYears.length > 0 && (
         <div className="panel-years">
           <div className="panel-years-title">Same date, previous years</div>
@@ -101,13 +110,16 @@ function CityPanel() {
 
 export function InfoPanel() {
   const { selected } = useSelection()
-  const { record, lakes } = useWaterData()
+  const { record, lakes, history } = useWaterData()
   if (!selected) return null
   if (selected === 'city') return <CityPanel />
 
   const lake = lakes[selected]
   const config = LAKES[selected]
   const r = lake.reading
+  const trend = history
+    .filter((h) => h.lakes[selected])
+    .map((h) => ({ date: h.date, value: h.lakes[selected]!.pctUseful }))
   const remarks = record.remarks.filter((s) =>
     REMARK_TERMS[selected].some((t) => s.toLowerCase().includes(t)),
   )
@@ -184,6 +196,13 @@ export function InfoPanel() {
               <dd>{r.rainSeasonMm.toFixed(0)} mm</dd>
             </div>
           </dl>
+
+          {trend.length > 1 && (
+            <div className="panel-trend">
+              <div className="panel-years-title">This season</div>
+              <Sparkline points={trend} />
+            </div>
+          )}
 
           {r.previousYears.length > 0 && (
             <div className="panel-years">

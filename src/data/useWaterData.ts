@@ -30,6 +30,8 @@ export interface WaterData {
   lakes: Record<LakeKey, LakeView>
   /** estimated days of supply left at ~total demand */
   daysOfSupply: number
+  /** full history, sorted ascending by date */
+  history: DailyRecord[]
 }
 
 function clamp01(v: number) {
@@ -38,7 +40,8 @@ function clamp01(v: number) {
 
 export function useWaterData(): WaterData {
   return useMemo(() => {
-    const record = latestRecord()
+    const records = allRecords()
+    const record = records[records.length - 1]
     const lakes = Object.fromEntries(
       ALL_LAKES.map((config) => {
         const reading = record.lakes[config.key]
@@ -55,6 +58,7 @@ export function useWaterData(): WaterData {
       totals: record.totals,
       lakes,
       daysOfSupply: Math.round(record.totals.liveStorageML / TOTAL_DEMAND_MLD),
+      history: records,
     }
   }, [])
 }
