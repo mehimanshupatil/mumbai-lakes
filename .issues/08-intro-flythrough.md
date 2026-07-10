@@ -1,6 +1,6 @@
 # 08 — Intro flythrough
 
-> **Status: ⬜ Not started.** Approved in the social-features discussion (2026-07-09).
+> **Status: ✅ Done (2026-07-10). 7s spline: over Upper Vaitarna → cascade → mains corridor → Bhandup → pull-out landing on default view. Skips on interaction/reduced-motion/?date links; once per session; ?intro=1 forces (for recordings), ?intro=0 disables. Lake chips stay visible; other UI fades out.** Approved in the social-features discussion (2026-07-09).
 
 ## Goal
 

@@ -12,6 +12,9 @@ export const capture: {
   camera: THREE.Camera | null
 } = { gl: null, scene: null, camera: null }
 
+/** set once the DEM has loaded — gates the intro flythrough */
+export const flags = { ready: false }
+
 export function CaptureBridge() {
   const { gl, scene, camera } = useThree()
   useEffect(() => {

@@ -40,11 +40,17 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: node scripts/ocr.mjs data/inbox
 
+      - name: Refresh OG card
+        if: steps.inbox.outputs.count != '0'
+        run: |
+          npm i --no-save @napi-rs/canvas
+          node scripts/render-og.mjs
+
       - name: Commit updated history
         if: steps.inbox.outputs.count != '0'
         run: |
           git config user.name 'lake-report-bot'
           git config user.email 'actions@github.com'
-          git add data/history.json data/archive data/inbox
+          git add data/history.json data/archive data/inbox public/og.jpg
           git diff --cached --quiet || git commit -m "data: lake report $(date -u +%F)"
           git push

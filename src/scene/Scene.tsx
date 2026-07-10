@@ -11,12 +11,15 @@ import { Rain } from './Rain'
 import { CameraRig } from './CameraRig'
 import { setSelected } from '../state/selection'
 import { useHeightfield } from './heightfield'
-import { CaptureBridge } from './capture'
+import { CaptureBridge, flags } from './capture'
 
 /** mounts only once the DEM has loaded (inside Suspense) → signals the app */
 function Ready({ onReady }: { onReady: () => void }) {
   useHeightfield()
-  useEffect(onReady, [onReady])
+  useEffect(() => {
+    flags.ready = true
+    onReady()
+  }, [onReady])
   return null
 }
 

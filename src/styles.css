@@ -490,6 +490,23 @@ body {
   display: none;
 }
 
+/* intro flythrough: pure scene, UI fades back in on landing */
+.header,
+.scrubber,
+.watermark {
+  transition: opacity 0.6s;
+}
+
+.intro-active .header,
+.intro-active .scrubber,
+.intro-active .watermark,
+.intro-active .zone-label,
+.intro-active .facility-label,
+.intro-active .district-label {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
 /* stock status: danger / warning / safe */
 .status-dot {
   display: inline-block;

@@ -1,6 +1,6 @@
 # 10 — Daily OG card refresh
 
-> **Status: ⬜ Not started.** Static og.jpg ships today; this makes it self-updating.
+> **Status: ✅ Done (2026-07-10). scripts/render-og.mjs (@napi-rs/canvas) draws % + status chip + days over public/og-base.jpg (UI-free scene shot); wired into ingest.yml, og.jpg committed with each report. Stable URL — scraper cache lag accepted.** Static og.jpg ships today; this makes it self-updating.
 
 ## Goal
 
