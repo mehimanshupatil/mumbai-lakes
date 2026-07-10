@@ -5,6 +5,7 @@ import { LAKES, type LakeKey } from '../config/lakes'
 import { BHANDUP_JUNCTION, CITY_END, PIPE_ROUTES, pipeRadius } from '../config/pipes'
 import { setHovered, setSelected, useSelection } from '../state/selection'
 import { useHeightfield, type Heightfield } from './heightfield'
+import { useDaylight } from './daylight'
 
 const PIPE = '#9fb4bc'
 const PIPE_ACTIVE = '#5fc6e4'
@@ -185,6 +186,7 @@ function Pipe({ spec }: { spec: PipeSpec }) {
 /** bright dots travelling along every pipe, lake → city */
 function FlowParticles({ specs }: { specs: PipeSpec[] }) {
   const ref = useRef<THREE.InstancedMesh>(null)
+  const { night } = useDaylight()
   const items = useMemo(() => {
     const list: Array<{ curve: THREE.CatmullRomCurve3; offset: number; speed: number; size: number }> = []
     for (const s of specs) {
@@ -219,7 +221,8 @@ function FlowParticles({ specs }: { specs: PipeSpec[] }) {
   return (
     <instancedMesh ref={ref} args={[undefined, undefined, items.length]} frustumCulled={false}>
       <sphereGeometry args={[1, 8, 8]} />
-      <meshBasicMaterial color={WATER_DOT} transparent opacity={0.95} />
+      {/* brighter at night so the veins glow under bloom */}
+      <meshBasicMaterial color={night > 0.5 ? '#d9f6ff' : WATER_DOT} transparent opacity={0.95} />
     </instancedMesh>
   )
 }

@@ -4,6 +4,7 @@ import { Html, Line } from '@react-three/drei'
 import * as THREE from 'three'
 import { BHANDUP_JUNCTION, FACILITIES, SOUTH_BEND, ZONES } from '../config/pipes'
 import { useHeightfield, type Heightfield } from './heightfield'
+import { useDaylight } from './daylight'
 
 const ZONE_DOT = '#4a6d7c'
 const DIST_LINE = '#6d8994'
@@ -51,6 +52,7 @@ function FadeLabel({
 /** Treatment plants and distribution-zone fan-out (per data/map/water-path.jpg) */
 export function Facilities() {
   const hf = useHeightfield()
+  const { night } = useDaylight()
 
   const { plants, zones, lines } = useMemo(() => {
     const plants = FACILITIES.map((f) => ({ ...f, pos: at(hf, f.lonLat) }))
@@ -89,7 +91,11 @@ export function Facilities() {
         <group key={z.name}>
           <mesh position={z.pos}>
             <sphereGeometry args={[0.45, 10, 10]} />
-            <meshStandardMaterial color={ZONE_DOT} />
+            <meshStandardMaterial
+              color={ZONE_DOT}
+              emissive="#7fd4ff"
+              emissiveIntensity={night * 0.7}
+            />
           </mesh>
           <FadeLabel
             worldPos={z.pos.clone().setY(z.pos.y + 0.8)}

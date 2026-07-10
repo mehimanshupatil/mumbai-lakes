@@ -4,6 +4,7 @@ import * as THREE from 'three'
 import { CITY_LATLON } from '../config/lakes'
 import { setHovered, setSelected, useSelection } from '../state/selection'
 import { useHeightfield } from './heightfield'
+import { useDaylight } from './daylight'
 
 const BUILDINGS = 46
 const CITY_BASE = '#cdc3b2'
@@ -23,6 +24,7 @@ function mulberry32(seed: number) {
 export function City() {
   const hf = useHeightfield()
   const { selected, hovered } = useSelection()
+  const { night } = useDaylight()
   const active = selected === 'city' || hovered === 'city'
 
   const { geometry, center } = useMemo(() => {
@@ -69,7 +71,13 @@ export function City() {
     <group onPointerOver={over} onPointerOut={out} onClick={click}>
       {geometry.map((g, i) => (
         <mesh key={i} geometry={g}>
-          <meshStandardMaterial color={active ? CITY_ACTIVE : CITY_BASE} roughness={0.85} />
+          {/* windows wake up at night — per-building random warmth */}
+          <meshStandardMaterial
+            color={active ? CITY_ACTIVE : CITY_BASE}
+            roughness={0.85}
+            emissive="#ffb04a"
+            emissiveIntensity={night * (0.15 + ((i * 2654435761) % 100) / 120)}
+          />
         </mesh>
       ))}
       {/* generous invisible tap target over the city */}

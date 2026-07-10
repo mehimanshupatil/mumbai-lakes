@@ -44,9 +44,11 @@ const FRAG = /* glsl */ `
     vec3 h = normalize(sun + viewDir);
     float spec = pow(max(dot(n, h), 0.0), 120.0);
 
-    vec3 skyTint = mix(vec3(0.55, 0.74, 0.85), vec3(0.16, 0.26, 0.42), uNight);
+    vec3 skyTint = mix(vec3(0.55, 0.74, 0.85), vec3(0.07, 0.13, 0.23), uNight);
     vec3 glint = mix(vec3(1.0, 0.95, 0.82), vec3(0.72, 0.82, 1.0), uNight);
-    vec3 col = mix(uColor, skyTint, fres * 0.55) + spec * glint * 0.85;
+    float fresAmt = fres * (0.55 - uNight * 0.25);
+    vec3 base = uColor * (1.0 - uNight * 0.72); // moonlit water is dark
+    vec3 col = mix(base, skyTint, fresAmt) + spec * glint * 0.85;
 
     float fogF = smoothstep(340.0, 820.0, dist);
     col = mix(col, uFogColor, fogF);

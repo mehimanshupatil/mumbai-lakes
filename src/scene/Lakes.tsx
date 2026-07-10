@@ -2,7 +2,7 @@ import { useRef } from 'react'
 import { useFrame, type ThreeEvent } from '@react-three/fiber'
 import { Html } from '@react-three/drei'
 import * as THREE from 'three'
-import { ALL_LAKES, type LakeKey } from '../config/lakes'
+import { ALL_LAKES, CITY_LATLON, type LakeKey } from '../config/lakes'
 import { useWaterData } from '../data/useWaterData'
 import { lakeStatus } from '../data/status'
 import { setHovered, setSelected, useSelection } from '../state/selection'
@@ -26,6 +26,7 @@ function Lake({ lakeKey }: { lakeKey: LakeKey }) {
   const basin = hf.basinByKey[lakeKey]
   const ref = useRef<THREE.Mesh>(null)
   const ringRef = useRef<THREE.Mesh>(null)
+  const spillRef = useRef<THREE.InstancedMesh>(null)
   // displayed fill eases toward the target — covers both the load intro
   // (0 → today) and time-scrubbing between records
   const anim = useRef(0)
@@ -45,7 +46,27 @@ function Lake({ lakeKey }: { lakeKey: LakeKey }) {
       m.opacity = 0.25 + 0.3 * (0.5 + 0.5 * Math.sin(t * 2.2 + basin.cz))
       ringRef.current.visible = overflowing && anim.current > lake.fill - 0.03
     }
+    if (spillRef.current) {
+      // waterfall particles tumbling over the rim toward the city side
+      for (let i = 0; i < SPILL_COUNT; i++) {
+        const seed = (i * 733) % 97
+        const fall = ((t * (2.6 + (seed % 5) * 0.35) + seed) % 4.2)
+        spillDummy.position.set(
+          spillDir.x * (basin.r * 0.92 + fall * 0.55) + ((seed % 7) - 3) * 0.14,
+          basin.waterMaxY + 0.3 - fall,
+          spillDir.y * (basin.r * 0.92 + fall * 0.55) + ((seed % 5) - 2) * 0.14,
+        )
+        spillDummy.scale.set(1, 1 + fall * 0.4, 1)
+        spillDummy.updateMatrix()
+        spillRef.current.setMatrixAt(i, spillDummy.matrix)
+      }
+      spillRef.current.instanceMatrix.needsUpdate = true
+    }
   })
+
+  // spill direction: over the rim toward the city (downstream-ish)
+  const cityP = hf.project(CITY_LATLON.lon, CITY_LATLON.lat)
+  const spillDir = new THREE.Vector2(cityP.x - basin.cx, cityP.z - basin.cz).normalize()
 
   const over = (e: ThreeEvent<PointerEvent>) => {
     e.stopPropagation()
@@ -72,6 +93,12 @@ function Lake({ lakeKey }: { lakeKey: LakeKey }) {
           <ringGeometry args={[basin.r * 0.72, basin.r * 0.84, 40]} />
           <meshBasicMaterial color="#bff0ff" transparent opacity={0.4} />
         </mesh>
+      )}
+      {overflowing && (
+        <instancedMesh ref={spillRef} args={[undefined, undefined, SPILL_COUNT]} frustumCulled={false}>
+          <boxGeometry args={[0.09, 0.5, 0.09]} />
+          <meshBasicMaterial color="#d6f2ff" transparent opacity={0.75} />
+        </instancedMesh>
       )}
       {/* fat invisible hit target so small lakes are easy to tap */}
       <mesh
@@ -107,6 +134,9 @@ function Lake({ lakeKey }: { lakeKey: LakeKey }) {
     </group>
   )
 }
+
+const SPILL_COUNT = 36
+const spillDummy = new THREE.Object3D()
 
 export function Lakes() {
   return (
