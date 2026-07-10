@@ -1,6 +1,6 @@
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { useFrame, type ThreeEvent } from '@react-three/fiber'
-import { Html } from '@react-three/drei'
+import { Html, Line } from '@react-three/drei'
 import * as THREE from 'three'
 import { ALL_LAKES, CITY_LATLON, type LakeKey } from '../config/lakes'
 import { useWaterData } from '../data/useWaterData'
@@ -88,6 +88,12 @@ function Lake({ lakeKey }: { lakeKey: LakeKey }) {
         <circleGeometry args={[basin.r * 0.72, 40]} />
         <WaterMaterial color={active ? WATER_ACTIVE : WATER} opacity={0.94} />
       </mesh>
+      {lake.reading?.previousYears?.[0] && (
+        <GhostRing
+          r={basin.r * 0.8}
+          y={hf.waterY(lakeKey, Math.min(1, lake.reading.previousYears[0].pctUseful / 100))}
+        />
+      )}
       {overflowing && (
         <mesh ref={ringRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, basin.waterMaxY + 0.06, 0]}>
           <ringGeometry args={[basin.r * 0.72, basin.r * 0.84, 40]} />
@@ -137,6 +143,32 @@ function Lake({ lakeKey }: { lakeKey: LakeKey }) {
 
 const SPILL_COUNT = 36
 const spillDummy = new THREE.Object3D()
+
+/** dashed ring at last year's same-date level — the reference frame */
+function GhostRing({ r, y }: { r: number; y: number }) {
+  const points = useMemo(() => {
+    const pts: THREE.Vector3[] = []
+    for (let i = 0; i <= 48; i++) {
+      const a = (i / 48) * Math.PI * 2
+      pts.push(new THREE.Vector3(Math.cos(a) * r, 0, Math.sin(a) * r))
+    }
+    return pts
+  }, [r])
+  return (
+    <group position={[0, y, 0]} renderOrder={5}>
+      <Line
+        points={points}
+        color="#f0f9ff"
+        transparent
+        opacity={0.55}
+        dashed
+        dashSize={0.55}
+        gapSize={0.45}
+        lineWidth={1.4}
+      />
+    </group>
+  )
+}
 
 export function Lakes() {
   return (

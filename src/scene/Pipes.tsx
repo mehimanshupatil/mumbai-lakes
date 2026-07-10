@@ -4,6 +4,7 @@ import * as THREE from 'three'
 import { LAKES, type LakeKey } from '../config/lakes'
 import { BHANDUP_JUNCTION, CITY_END, PIPE_ROUTES, pipeRadius } from '../config/pipes'
 import { setHovered, setSelected, useSelection } from '../state/selection'
+import { useWaterData } from '../data/useWaterData'
 import { useHeightfield, type Heightfield } from './heightfield'
 import { useDaylight } from './daylight'
 
@@ -48,6 +49,8 @@ interface PipeSpec {
   curve: THREE.CatmullRomCurve3
   radius: number
   particles: number
+  /** 0 = dry (below LDL), 1 = full flow — scales particle count and speed */
+  activity: number
 }
 
 /**
@@ -57,6 +60,17 @@ interface PipeSpec {
  */
 function usePipes(): PipeSpec[] {
   const hf = useHeightfield()
+  const { lakes } = useWaterData()
+
+  // a lake below its Low Draw-off Level (or ~empty) can't supply — dry pipe
+  const act = (key: LakeKey): number => {
+    const r = lakes[key].reading
+    if (!r) return 1
+    const cfg = LAKES[key]
+    if (r.levelM <= cfg.ldlM + 0.05 || r.pctUseful < 1) return 0
+    return 0.4 + 0.6 * Math.min(1, r.pctUseful / 60)
+  }
+
   return useMemo(() => {
     const jp = hf.project(BHANDUP_JUNCTION[0], BHANDUP_JUNCTION[1])
     const junction = new THREE.Vector3(jp.x, 0, jp.z)
@@ -109,11 +123,17 @@ function usePipes(): PipeSpec[] {
       end.z = junction.z + dock.y * dockLane * DOCK_SQUEEZE
       settleHeights(hf, pts)
       const share = r.radiusShare ?? LAKES[r.key].supplyShare
+      // Modak's main carries the whole Vaitarna cascade — weight the activity
+      const activity =
+        r.key === 'modak_sagar'
+          ? (act('upper_vaitarna') * 0.151 + act('middle_vaitarna') * 0.11 + act('modak_sagar') * 0.11) / 0.371
+          : act(r.key)
       return {
         key: r.key,
         curve: new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.1),
         radius: pipeRadius(share),
-        particles: Math.ceil(3 + share * 36),
+        particles: Math.ceil((3 + share * 36) * activity),
+        activity,
       }
     })
 
@@ -121,16 +141,18 @@ function usePipes(): PipeSpec[] {
     for (const { r, pts } of raw.filter(({ r }) => !r.viaTrunk)) {
       settleHeights(hf, pts)
       const share = r.radiusShare ?? LAKES[r.key].supplyShare
+      const activity = act(r.key)
       specs.push({
         key: r.key,
         curve: new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.1),
         radius: pipeRadius(share),
-        particles: Math.ceil(3 + share * 36),
+        particles: Math.ceil((3 + share * 36) * activity),
+        activity,
       })
     }
 
     return specs
-  }, [hf])
+  }, [hf, lakes])
 }
 
 function Pipe({ spec }: { spec: PipeSpec }) {
@@ -194,7 +216,7 @@ function FlowParticles({ specs }: { specs: PipeSpec[] }) {
         list.push({
           curve: s.curve,
           offset: i / s.particles,
-          speed: 0.025 + (0.012 * ((i * 7919) % 13)) / 13,
+          speed: (0.025 + (0.012 * ((i * 7919) % 13)) / 13) * (0.45 + 0.55 * s.activity),
           size: Math.min(0.42, s.radius * 0.55),
         })
       }
