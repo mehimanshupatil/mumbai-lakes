@@ -1,5 +1,6 @@
 import { Suspense, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
+import { Sky, Stars } from '@react-three/drei'
 import { Terrain, Sea } from './Terrain'
 import { Lakes } from './Lakes'
 import { Districts } from './Districts'
@@ -8,10 +9,12 @@ import { Pipes } from './Pipes'
 import { City } from './City'
 import { Facilities } from './Facilities'
 import { Rain } from './Rain'
+import { Clouds } from './Clouds'
 import { CameraRig } from './CameraRig'
 import { setSelected } from '../state/selection'
 import { useHeightfield } from './heightfield'
 import { CaptureBridge, flags } from './capture'
+import { useDaylight } from './daylight'
 
 /** mounts only once the DEM has loaded (inside Suspense) → signals the app */
 function Ready({ onReady }: { onReady: () => void }) {
@@ -23,11 +26,31 @@ function Ready({ onReady }: { onReady: () => void }) {
   return null
 }
 
-// deep-ocean backdrop — the map floats in water, no pale void at the edges
-const SKY = '#14536e'
-
 // portrait phones need a farther start position to fit the whole system
 const PORTRAIT = typeof window !== 'undefined' && window.innerHeight > window.innerWidth
+
+/** lights + sky driven by the live IST clock (see daylight.ts; ?t= override) */
+function Daylight() {
+  const d = useDaylight()
+  return (
+    <>
+      <color attach="background" args={[d.skyColor]} />
+      <fog attach="fog" args={[d.skyColor, 340, 820]} />
+      <ambientLight intensity={d.ambientIntensity} color={d.ambientColor} />
+      <directionalLight position={d.sunPos} intensity={d.sunIntensity} color={d.sunColor} />
+      <hemisphereLight args={[d.ambientColor, '#5c6350', 0.35 + 0.15 * (1 - d.night)]} />
+      <Sky
+        distance={4000}
+        sunPosition={d.skySunPos}
+        turbidity={6}
+        rayleigh={d.night > 0.5 ? 0.4 : 1.6}
+        mieCoefficient={0.004}
+        mieDirectionalG={0.85}
+      />
+      {d.night > 0.35 && <Stars radius={900} depth={60} count={2200} factor={5} fade speed={0.6} />}
+    </>
+  )
+}
 
 export function Scene({ onReady }: { onReady: () => void }) {
   return (
@@ -39,14 +62,9 @@ export function Scene({ onReady }: { onReady: () => void }) {
         far: 1200,
       }}
       dpr={[1, 2]}
-      style={{ background: SKY }}
       onPointerMissed={() => setSelected(null)}
     >
-      <fog attach="fog" args={[SKY, 340, 820]} />
-      {/* golden-hour grade: warm sun + soft warm fill, kept bright */}
-      <ambientLight intensity={0.62} color="#fff3e2" />
-      <directionalLight position={[-110, 105, -50]} intensity={1.5} color="#ffdfb4" />
-      <hemisphereLight args={['#c9dfe9', '#6e7350', 0.5]} />
+      <Daylight />
       <Suspense fallback={null}>
         <Terrain />
         <Sea />
@@ -57,6 +75,7 @@ export function Scene({ onReady }: { onReady: () => void }) {
         <City />
         <Facilities />
         <Rain />
+        <Clouds />
         <Ready onReady={onReady} />
       </Suspense>
       <CaptureBridge />
