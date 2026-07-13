@@ -2344,5 +2344,554 @@
       "5. Vehar Lake started overflowing on 07.07.2026 at 21.00 Hrs",
       "6. Tulsi Lake started overflowing on 07.07.2026 at 23.43 Hrs"
     ]
+  },
+  {
+    "date": "2026-07-11",
+    "reportTime": "06:00",
+    "totals": {
+      "liveStorageML": 721278,
+      "pctUseful": 49.83,
+      "previousYears": [
+        {
+          "year": 2025,
+          "liveStorageML": 1069357,
+          "pctUseful": 73.88
+        },
+        {
+          "year": 2024,
+          "liveStorageML": 322143,
+          "pctUseful": 22.26
+        }
+      ]
+    },
+    "lakes": {
+      "upper_vaitarna": {
+        "levelM": 598.06,
+        "rise24hM": 0.04,
+        "liveStorageML": 63569,
+        "pctUseful": 28,
+        "rainTodayMm": 0,
+        "rainSeasonMm": 899,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 601.68,
+            "liveStorageML": 168050,
+            "pctUseful": 74.02
+          },
+          {
+            "year": 2024,
+            "levelM": 594.98,
+            "liveStorageML": 59490,
+            "pctUseful": 26.2
+          }
+        ]
+      },
+      "modak_sagar": {
+        "levelM": 160.39,
+        "rise24hM": -0.1,
+        "liveStorageML": 106492,
+        "pctUseful": 82.6,
+        "rainTodayMm": 0,
+        "rainSeasonMm": 1317,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 163.15,
+            "liveStorageML": 128925,
+            "pctUseful": 100
+          },
+          {
+            "year": 2024,
+            "levelM": 153.2,
+            "liveStorageML": 48643,
+            "pctUseful": 37.73
+          }
+        ]
+      },
+      "tansa": {
+        "levelM": 126.96,
+        "rise24hM": 0.02,
+        "liveStorageML": 113989,
+        "pctUseful": 78.57,
+        "rainTodayMm": 0,
+        "rainSeasonMm": 1367,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 127.01,
+            "liveStorageML": 114804,
+            "pctUseful": 79.13
+          },
+          {
+            "year": 2024,
+            "levelM": 124.05,
+            "liveStorageML": 86715,
+            "pctUseful": 60.73
+          }
+        ]
+      },
+      "middle_vaitarna": {
+        "levelM": 264.33,
+        "rise24hM": 0.05,
+        "liveStorageML": 84330,
+        "pctUseful": 43.61,
+        "rainTodayMm": 0,
+        "rainSeasonMm": 952,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 282.61,
+            "liveStorageML": 179736,
+            "pctUseful": 93.24
+          },
+          {
+            "year": 2024,
+            "levelM": 252.3,
+            "liveStorageML": 42872,
+            "pctUseful": 22.15
+          }
+        ]
+      },
+      "bhatsa": {
+        "levelM": 125.08,
+        "rise24hM": 0.28,
+        "liveStorageML": 317284,
+        "pctUseful": 44.25,
+        "rainTodayMm": 0,
+        "rainSeasonMm": 1070,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 131.85,
+            "liveStorageML": 460440,
+            "pctUseful": 64.21
+          },
+          {
+            "year": 2024,
+            "levelM": 115.5,
+            "liveStorageML": 148462,
+            "pctUseful": 20.7
+          }
+        ]
+      },
+      "vehar": {
+        "levelM": 80.29,
+        "rise24hM": -0.03,
+        "liveStorageML": 27698,
+        "pctUseful": 100,
+        "rainTodayMm": 0,
+        "rainSeasonMm": 1643,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 77.26,
+            "liveStorageML": 13396,
+            "pctUseful": 48.36
+          },
+          {
+            "year": 2024,
+            "levelM": 76.79,
+            "liveStorageML": 11345,
+            "pctUseful": 40.96
+          }
+        ]
+      },
+      "tulsi": {
+        "levelM": 139.19,
+        "rise24hM": -0.06,
+        "liveStorageML": 8046,
+        "pctUseful": 100,
+        "rainTodayMm": 0,
+        "rainSeasonMm": 2196,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 135.8,
+            "liveStorageML": 4006,
+            "pctUseful": 49.79
+          },
+          {
+            "year": 2024,
+            "levelM": 136.46,
+            "liveStorageML": 4714,
+            "pctUseful": 58.59
+          }
+        ]
+      }
+    },
+    "remarks": [
+      "1. Middle Vaitarna WSCPO Gate closed on 06/07/2026 @ 14:00 Hrs",
+      "2. Upper Vaitarna Release stopped from 06/07/2026 @ 10.00 Hrs",
+      "3. Bhandup Complex Today's Rainfall: Nil ; Total Rainfall 1716 mm.",
+      "4. Vehar Lake started overflowing on 07.07.2026 at 21.00 Hrs",
+      "5. Tulsi Lake started overflowing on 07.07.2026 at 23.43 Hrs"
+    ]
+  },
+  {
+    "date": "2026-07-12",
+    "reportTime": "06:00",
+    "totals": {
+      "liveStorageML": 721354,
+      "pctUseful": 49.84,
+      "previousYears": [
+        {
+          "year": 2025,
+          "liveStorageML": 1077906,
+          "pctUseful": 74.47
+        },
+        {
+          "year": 2024,
+          "liveStorageML": 329991,
+          "pctUseful": 22.8
+        }
+      ]
+    },
+    "lakes": {
+      "upper_vaitarna": {
+        "levelM": 598.06,
+        "rise24hM": 0,
+        "liveStorageML": 63569,
+        "pctUseful": 28,
+        "rainTodayMm": 0,
+        "rainSeasonMm": 899,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 601.74,
+            "liveStorageML": 170053,
+            "pctUseful": 74.89
+          },
+          {
+            "year": 2024,
+            "levelM": 594.98,
+            "liveStorageML": 0,
+            "pctUseful": 0
+          }
+        ]
+      },
+      "modak_sagar": {
+        "levelM": 160.26,
+        "rise24hM": -0.13,
+        "liveStorageML": 105461,
+        "pctUseful": 81.8,
+        "rainTodayMm": 0,
+        "rainSeasonMm": 1317,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 163.15,
+            "liveStorageML": 128925,
+            "pctUseful": 100
+          },
+          {
+            "year": 2024,
+            "levelM": 152.16,
+            "liveStorageML": 47746,
+            "pctUseful": 37.03
+          }
+        ]
+      },
+      "tansa": {
+        "levelM": 126.97,
+        "rise24hM": 0.01,
+        "liveStorageML": 114512,
+        "pctUseful": 78.66,
+        "rainTodayMm": 4.8,
+        "rainSeasonMm": 646,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 127.06,
+            "liveStorageML": 115836,
+            "pctUseful": 79.44
+          },
+          {
+            "year": 2024,
+            "levelM": 124.09,
+            "liveStorageML": 51211,
+            "pctUseful": 35.28
+          }
+        ]
+      },
+      "middle_vaitarna": {
+        "levelM": 264.46,
+        "rise24hM": 0.13,
+        "liveStorageML": 88176,
+        "pctUseful": 45.69,
+        "rainTodayMm": 19,
+        "rainSeasonMm": 1609,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 282.57,
+            "liveStorageML": 193530,
+            "pctUseful": 100
+          },
+          {
+            "year": 2024,
+            "levelM": 252.76,
+            "liveStorageML": 44132,
+            "pctUseful": 22.8
+          }
+        ]
+      },
+      "bhatsa": {
+        "levelM": 125.1,
+        "rise24hM": 0.02,
+        "liveStorageML": 317680,
+        "pctUseful": 44.3,
+        "rainTodayMm": 0,
+        "rainSeasonMm": 1070,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 132.1,
+            "liveStorageML": 466116,
+            "pctUseful": 65.01
+          },
+          {
+            "year": 2024,
+            "levelM": 115.9,
+            "liveStorageML": 154700,
+            "pctUseful": 21.57
+          }
+        ]
+      },
+      "vehar": {
+        "levelM": 80.25,
+        "rise24hM": -0.04,
+        "liveStorageML": 27698,
+        "pctUseful": 100,
+        "rainTodayMm": 0,
+        "rainSeasonMm": 1643,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 77.27,
+            "liveStorageML": 13450,
+            "pctUseful": 48.56
+          },
+          {
+            "year": 2024,
+            "levelM": 76.89,
+            "liveStorageML": 11771,
+            "pctUseful": 42.05
+          }
+        ]
+      },
+      "tulsi": {
+        "levelM": 139.16,
+        "rise24hM": -0.03,
+        "liveStorageML": 8019,
+        "pctUseful": 99.66,
+        "rainTodayMm": 0,
+        "rainSeasonMm": 2196,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 135.84,
+            "liveStorageML": 4051,
+            "pctUseful": 50.35
+          },
+          {
+            "year": 2024,
+            "levelM": 136.66,
+            "liveStorageML": 4936,
+            "pctUseful": 61.35
+          }
+        ]
+      }
+    },
+    "remarks": [
+      "1. Middle Vaitarna WSCPO Gate closed on 06/07/2026 @ 14:00 Hrs",
+      "2. Upper Vaitarna Release stopped from 06/07/2026 @ 10.00 Hrs",
+      "3. Bhandup Complex Today's Rainfall: Nil ; Total Rainfall 1716 mm.",
+      "4. Vehar Lake started overflowing on 07.07.2026 at 21.00 Hrs",
+      "5. Tulsi Lake started overflowing on 07.07.2026 at 23.43 Hrs"
+    ]
+  },
+  {
+    "date": "2026-07-13",
+    "reportTime": "06:00",
+    "totals": {
+      "liveStorageML": 722649,
+      "pctUseful": 49.93,
+      "previousYears": [
+        {
+          "year": 2025,
+          "liveStorageML": 1087865,
+          "pctUseful": 75.16
+        },
+        {
+          "year": 2024,
+          "liveStorageML": 361826,
+          "pctUseful": 25
+        }
+      ]
+    },
+    "lakes": {
+      "upper_vaitarna": {
+        "levelM": 598.09,
+        "rise24hM": 0.03,
+        "liveStorageML": 64431,
+        "pctUseful": 28.38,
+        "rainTodayMm": 0,
+        "rainSeasonMm": 899,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 600.16,
+            "liveStorageML": 172027,
+            "pctUseful": 75.81
+          },
+          {
+            "year": 2024,
+            "levelM": 595.25,
+            "liveStorageML": 0,
+            "pctUseful": 0
+          }
+        ]
+      },
+      "modak_sagar": {
+        "levelM": 160.07,
+        "rise24hM": -0.19,
+        "liveStorageML": 103964,
+        "pctUseful": 80.64,
+        "rainTodayMm": 37.42,
+        "rainSeasonMm": 794,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 163.51,
+            "liveStorageML": 128925,
+            "pctUseful": 100
+          },
+          {
+            "year": 2024,
+            "levelM": 160.6,
+            "liveStorageML": 48482,
+            "pctUseful": 37.62
+          }
+        ]
+      },
+      "tansa": {
+        "levelM": 125.32,
+        "rise24hM": -0.02,
+        "liveStorageML": 113826,
+        "pctUseful": 78.64,
+        "rainTodayMm": 45,
+        "rainSeasonMm": 1367,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 127.11,
+            "liveStorageML": 116653,
+            "pctUseful": 80.11
+          },
+          {
+            "year": 2024,
+            "levelM": 124.47,
+            "liveStorageML": 9547,
+            "pctUseful": 6.56
+          }
+        ]
+      },
+      "middle_vaitarna": {
+        "levelM": 264.54,
+        "rise24hM": 0.07,
+        "liveStorageML": 90828,
+        "pctUseful": 46.94,
+        "rainTodayMm": 27,
+        "rainSeasonMm": 1636,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 282.6,
+            "liveStorageML": 179675,
+            "pctUseful": 92.84
+          },
+          {
+            "year": 2024,
+            "levelM": 253.53,
+            "liveStorageML": 46242,
+            "pctUseful": 23.89
+          }
+        ]
+      },
+      "bhatsa": {
+        "levelM": 125.2,
+        "rise24hM": 0.1,
+        "liveStorageML": 319659,
+        "pctUseful": 44.58,
+        "rainTodayMm": 0,
+        "rainSeasonMm": 1070,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 132.4,
+            "liveStorageML": 473010,
+            "pctUseful": 65.97
+          },
+          {
+            "year": 2024,
+            "levelM": 117.27,
+            "liveStorageML": 279640,
+            "pctUseful": 39.06
+          }
+        ]
+      },
+      "vehar": {
+        "levelM": 80.23,
+        "rise24hM": -0.02,
+        "liveStorageML": 27698,
+        "pctUseful": 100,
+        "rainTodayMm": 0,
+        "rainSeasonMm": 1643,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 77.22,
+            "liveStorageML": 13478,
+            "pctUseful": 48.66
+          },
+          {
+            "year": 2024,
+            "levelM": 77.97,
+            "liveStorageML": 0,
+            "pctUseful": 0
+          }
+        ]
+      },
+      "tulsi": {
+        "levelM": 139.13,
+        "rise24hM": -0.03,
+        "liveStorageML": 7986,
+        "pctUseful": 99.25,
+        "rainTodayMm": 0,
+        "rainSeasonMm": 2196,
+        "previousYears": [
+          {
+            "year": 2025,
+            "levelM": 135.89,
+            "liveStorageML": 4102,
+            "pctUseful": 50.98
+          },
+          {
+            "year": 2024,
+            "levelM": 137.01,
+            "liveStorageML": 5330,
+            "pctUseful": 66.24
+          }
+        ]
+      }
+    },
+    "remarks": [
+      "1. Middle Vaitarna WSCP0 Gate closed on 06/07/2026 @ 14:00 Hrs",
+      "2. Upper Vaitarna Release stopped from 06/07/2026 @ 10.00 Hrs",
+      "3. Bhandup Complex Today's Rainfall: Nil ; Total Rainfall 1716 mm.",
+      "4. Vehar Lake started overflowing on 07.07.2026 at 21.00 Hrs",
+      "5. Tulsi Lake started overflowing on 07.07.2026 at 23.43 Hrs"
+    ]
   }
 ]

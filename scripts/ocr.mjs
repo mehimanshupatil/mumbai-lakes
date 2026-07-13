@@ -225,7 +225,7 @@ function medianMerge(recs) {
 
 /** printed %-of-capacity is redundant with storage; use it to repair a
  * misread storage figure (capacity is static truth) */
-function heal(rec) {
+function heal(rec, attempts = []) {
   const notes = []
   for (const key of LAKE_KEYS) {
     const l = rec.lakes[key]
@@ -237,6 +237,38 @@ function heal(rec) {
       l.liveStorageML = Math.round(expected)
     }
   }
+
+  // A hallucinated row can be self-consistent (the model derives pctUseful
+  // from its own misread storage), so the check above never fires. Such a
+  // row varies across attempts while genuine reads are stable — when the
+  // grand total is trusted and exactly one lake is unstable, rebuild that
+  // lake as total − sum(others).
+  const sumBefore = LAKE_KEYS.reduce((a, k) => a + (rec.lakes[k]?.liveStorageML ?? 0), 0)
+  const totalFromPct = (rec.totals.pctUseful / 100) * TOTAL_CAPACITY
+  if (
+    attempts.length > 1 &&
+    Math.abs(rec.totals.liveStorageML - totalFromPct) <= TOTAL_CAPACITY * 0.0005 &&
+    Math.abs(sumBefore - rec.totals.liveStorageML) > rec.totals.liveStorageML * 0.01
+  ) {
+    const unstable = LAKE_KEYS.filter((k) => {
+      const vals = attempts.map((a) => a.lakes?.[k]?.liveStorageML).filter((v) => typeof v === 'number')
+      return vals.length > 1 && Math.max(...vals) - Math.min(...vals) > Math.max(60, LAKES[k].fslUsefulML * 0.006)
+    })
+    if (unstable.length === 1) {
+      const key = unstable[0]
+      const others = sumBefore - rec.lakes[key].liveStorageML
+      const fixed = rec.totals.liveStorageML - others
+      if (fixed >= 0 && fixed <= LAKES[key].fslUsefulML * 1.005) {
+        const pct = +((fixed / LAKES[key].fslUsefulML) * 100).toFixed(2)
+        notes.push(
+          `${key}: storage ${rec.lakes[key].liveStorageML} → ${fixed}, pct ${rec.lakes[key].pctUseful} → ${pct} (attempts disagreed; rebuilt from total − other lakes)`,
+        )
+        rec.lakes[key].liveStorageML = fixed
+        rec.lakes[key].pctUseful = pct
+      }
+    }
+  }
+
   const sum = LAKE_KEYS.reduce((a, k) => a + (rec.lakes[k]?.liveStorageML ?? 0), 0)
   const expectedTotal = (rec.totals.pctUseful / 100) * TOTAL_CAPACITY
   if (
@@ -268,7 +300,7 @@ async function processImage(imagePath, history) {
       console.log('  consensus of attempts validates ✓')
       rec = merged
     } else {
-      const notes = heal(merged)
+      const notes = heal(merged, attempts)
       if (!validateRecord(merged, history).length) {
         notes.forEach((n) => console.log(`  healed: ${n}`))
         console.log('  consensus + healing validates ✓')
